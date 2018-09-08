@@ -165,13 +165,17 @@ type Record2 a
 jsonDecRecord2 : Json.Decode.Decoder a -> Json.Decode.Decoder (Record2 a)
 jsonDecRecord2 localDecoder_a =
     ("foo" := Json.Decode.int)
-        >>= (\pfoo ->
+        |> andThen
+            (\pfoo ->
                 Json.Decode.maybe ("bar" := Json.Decode.int)
-                    >>= (\pbar ->
+                    |> andThen
+                        (\pbar ->
                             ("baz" := localDecoder_a)
-                                >>= (\pbaz ->
+                                |> andThen
+                                    (\pbaz ->
                                         Json.Decode.maybe ("qux" := localDecoder_a)
-                                            >>= (\pqux ->
+                                            |> andThen
+                                                (\pqux ->
                                                     Json.Decode.succeed (Record2 { foo = pfoo, bar = pbar, baz = pbaz, qux = pqux })
                                                 )
                                     )
@@ -205,8 +209,8 @@ jsonDecSum01 localDecoder_a =
                 [ ( "Sum01A", Json.Decode.map Sum01A localDecoder_a )
                 , ( "Sum01B", Json.Decode.map Sum01B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum01C", Json.Decode.map2 Sum01C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum01D", Json.Decode.map Sum01D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum01E", Json.Decode.map Sum01E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum01D", Json.Decode.map Sum01D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum01E", Json.Decode.map Sum01E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
 
         jsonDecObjectSetSum01 =
@@ -254,8 +258,8 @@ jsonDecSum02 localDecoder_a =
                 [ ( "Sum02A", Json.Decode.map Sum02A localDecoder_a )
                 , ( "Sum02B", Json.Decode.map Sum02B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum02C", Json.Decode.map2 Sum02C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum02D", Json.Decode.map Sum02D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum02E", Json.Decode.map Sum02E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum02D", Json.Decode.map Sum02D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum02E", Json.Decode.map Sum02E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
 
         jsonDecObjectSetSum02 =
@@ -303,8 +307,8 @@ jsonDecSum03 localDecoder_a =
                 [ ( "Sum03A", Json.Decode.map Sum03A localDecoder_a )
                 , ( "Sum03B", Json.Decode.map Sum03B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum03C", Json.Decode.map2 Sum03C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum03D", Json.Decode.map Sum03D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum03E", Json.Decode.map Sum03E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum03D", Json.Decode.map Sum03D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum03E", Json.Decode.map Sum03E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
 
         jsonDecObjectSetSum03 =
@@ -352,8 +356,8 @@ jsonDecSum04 localDecoder_a =
                 [ ( "Sum04A", Json.Decode.map Sum04A localDecoder_a )
                 , ( "Sum04B", Json.Decode.map Sum04B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum04C", Json.Decode.map2 Sum04C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum04D", Json.Decode.map Sum04D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum04E", Json.Decode.map Sum04E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum04D", Json.Decode.map Sum04D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum04E", Json.Decode.map Sum04E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
 
         jsonDecObjectSetSum04 =
@@ -401,8 +405,8 @@ jsonDecSum05 localDecoder_a =
                 [ ( "Sum05A", Json.Decode.map Sum05A localDecoder_a )
                 , ( "Sum05B", Json.Decode.map Sum05B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum05C", Json.Decode.map2 Sum05C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum05D", Json.Decode.map Sum05D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum05E", Json.Decode.map Sum05E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum05D", Json.Decode.map Sum05D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum05E", Json.Decode.map Sum05E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
     in
     decodeSumObjectWithSingleField "Sum05" jsonDecDictSum05
@@ -447,8 +451,8 @@ jsonDecSum06 localDecoder_a =
                 [ ( "Sum06A", Json.Decode.map Sum06A localDecoder_a )
                 , ( "Sum06B", Json.Decode.map Sum06B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum06C", Json.Decode.map2 Sum06C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum06D", Json.Decode.map Sum06D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum06E", Json.Decode.map Sum06E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum06D", Json.Decode.map Sum06D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum06E", Json.Decode.map Sum06E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
     in
     decodeSumObjectWithSingleField "Sum06" jsonDecDictSum06
@@ -493,8 +497,8 @@ jsonDecSum07 localDecoder_a =
                 [ ( "Sum07A", Json.Decode.map Sum07A localDecoder_a )
                 , ( "Sum07B", Json.Decode.map Sum07B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum07C", Json.Decode.map2 Sum07C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum07D", Json.Decode.map Sum07D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum07E", Json.Decode.map Sum07E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum07D", Json.Decode.map Sum07D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum07E", Json.Decode.map Sum07E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
     in
     decodeSumObjectWithSingleField "Sum07" jsonDecDictSum07
@@ -539,8 +543,8 @@ jsonDecSum08 localDecoder_a =
                 [ ( "Sum08A", Json.Decode.map Sum08A localDecoder_a )
                 , ( "Sum08B", Json.Decode.map Sum08B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum08C", Json.Decode.map2 Sum08C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum08D", Json.Decode.map Sum08D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum08E", Json.Decode.map Sum08E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum08D", Json.Decode.map Sum08D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum08E", Json.Decode.map Sum08E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
     in
     decodeSumObjectWithSingleField "Sum08" jsonDecDictSum08
@@ -585,8 +589,8 @@ jsonDecSum09 localDecoder_a =
                 [ ( "Sum09A", Json.Decode.map Sum09A localDecoder_a )
                 , ( "Sum09B", Json.Decode.map Sum09B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum09C", Json.Decode.map2 Sum09C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum09D", Json.Decode.map Sum09D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum09E", Json.Decode.map Sum09E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum09D", Json.Decode.map Sum09D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum09E", Json.Decode.map Sum09E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
     in
     decodeSumTwoElemArray "Sum09" jsonDecDictSum09
@@ -631,8 +635,8 @@ jsonDecSum10 localDecoder_a =
                 [ ( "Sum10A", Json.Decode.map Sum10A localDecoder_a )
                 , ( "Sum10B", Json.Decode.map Sum10B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum10C", Json.Decode.map2 Sum10C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum10D", Json.Decode.map Sum10D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum10E", Json.Decode.map Sum10E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum10D", Json.Decode.map Sum10D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum10E", Json.Decode.map Sum10E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
     in
     decodeSumTwoElemArray "Sum10" jsonDecDictSum10
@@ -677,8 +681,8 @@ jsonDecSum11 localDecoder_a =
                 [ ( "Sum11A", Json.Decode.map Sum11A localDecoder_a )
                 , ( "Sum11B", Json.Decode.map Sum11B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum11C", Json.Decode.map2 Sum11C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum11D", Json.Decode.map Sum11D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum11E", Json.Decode.map Sum11E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum11D", Json.Decode.map Sum11D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum11E", Json.Decode.map Sum11E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
     in
     decodeSumTwoElemArray "Sum11" jsonDecDictSum11
@@ -723,8 +727,8 @@ jsonDecSum12 localDecoder_a =
                 [ ( "Sum12A", Json.Decode.map Sum12A localDecoder_a )
                 , ( "Sum12B", Json.Decode.map Sum12B (Json.Decode.maybe localDecoder_a) )
                 , ( "Sum12C", Json.Decode.map2 Sum12C (Json.Decode.index 0 localDecoder_a) (Json.Decode.index 1 localDecoder_a) )
-                , ( "Sum12D", Json.Decode.map Sum12D (("foo" := localDecoder_a) >>= (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
-                , ( "Sum12E", Json.Decode.map Sum12E (("bar" := Json.Decode.int) >>= (\pbar -> ("baz" := Json.Decode.int) >>= (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
+                , ( "Sum12D", Json.Decode.map Sum12D (("foo" := localDecoder_a) |> andThen (\pfoo -> Json.Decode.succeed { foo = pfoo })) )
+                , ( "Sum12E", Json.Decode.map Sum12E (("bar" := Json.Decode.int) |> andThen (\pbar -> ("baz" := Json.Decode.int) |> andThen (\pbaz -> Json.Decode.succeed { bar = pbar, baz = pbaz }))) )
                 ]
     in
     decodeSumTwoElemArray "Sum12" jsonDecDictSum12
@@ -818,7 +822,8 @@ type SimpleRecord01 a
 jsonDecSimpleRecord01 : Json.Decode.Decoder a -> Json.Decode.Decoder (SimpleRecord01 a)
 jsonDecSimpleRecord01 localDecoder_a =
     ("qux" := localDecoder_a)
-        >>= (\pqux ->
+        |> andThen
+            (\pqux ->
                 Json.Decode.succeed (SimpleRecord01 { qux = pqux })
             )
 
@@ -839,7 +844,8 @@ type SimpleRecord02 a
 jsonDecSimpleRecord02 : Json.Decode.Decoder a -> Json.Decode.Decoder (SimpleRecord02 a)
 jsonDecSimpleRecord02 localDecoder_a =
     localDecoder_a
-        >>= (\pqux ->
+        |> andThen
+            (\pqux ->
                 Json.Decode.succeed (SimpleRecord02 { qux = pqux })
             )
 
@@ -858,7 +864,8 @@ type SimpleRecord03 a
 jsonDecSimpleRecord03 : Json.Decode.Decoder a -> Json.Decode.Decoder (SimpleRecord03 a)
 jsonDecSimpleRecord03 localDecoder_a =
     ("qux" := localDecoder_a)
-        >>= (\pqux ->
+        |> andThen
+            (\pqux ->
                 Json.Decode.succeed (SimpleRecord03 { qux = pqux })
             )
 
@@ -879,7 +886,8 @@ type SimpleRecord04 a
 jsonDecSimpleRecord04 : Json.Decode.Decoder a -> Json.Decode.Decoder (SimpleRecord04 a)
 jsonDecSimpleRecord04 localDecoder_a =
     localDecoder_a
-        >>= (\pqux ->
+        |> andThen
+            (\pqux ->
                 Json.Decode.succeed (SimpleRecord04 { qux = pqux })
             )
 
