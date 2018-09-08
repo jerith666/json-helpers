@@ -121,14 +121,21 @@ type Record1 a
 
 jsonDecRecord1 : Json.Decode.Decoder a -> Json.Decode.Decoder (Record1 a)
 jsonDecRecord1 localDecoder_a =
-    ("foo" := Json.Decode.int)
-        >>= (\pfoo ->
-                Json.Decode.maybe ("bar" := Json.Decode.int)
-                    >>= (\pbar ->
-                            ("baz" := localDecoder_a)
-                                >>= (\pbaz ->
-                                        Json.Decode.maybe ("qux" := localDecoder_a)
-                                            >>= (\pqux ->
+    "foo"
+        |> Json.Helpers.field Json.Decode.int
+        |> andThen
+            (\pfoo ->
+                Json.Decode.maybe ("bar" |> Json.Helpers.field Json.Decode.int)
+                    |> andThen
+                        (\pbar ->
+                            "baz"
+                                |> Json.Helpers.field
+                                    localDecoder_a
+                                |> andThen
+                                    (\pbaz ->
+                                        Json.Decode.maybe ("qux" |> Json.Helpers.field localDecoder_a)
+                                            |> andThen
+                                                (\pqux ->
                                                     Json.Decode.succeed (Record1 { foo = pfoo, bar = pbar, baz = pbaz, qux = pqux })
                                                 )
                                     )
