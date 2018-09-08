@@ -348,14 +348,14 @@ decodeMap decKey decVal =
 
 {-| Helper function for encoding map-like objects. It takes an encoder for the key type and an encoder for the value type
 -}
-encodeMap : (comparable -> Json.Encode.Value) -> (v -> Json.Encode.Value) -> Dict comparable v -> Json.Encode.Value
+encodeMap : (comparable -> String) -> (v -> Json.Encode.Value) -> Dict comparable v -> Json.Encode.Value
 encodeMap encKey encVal =
     Json.Encode.dict encKey encVal
 
 
 {-| An alias to `encodeMap` that is compatible with the naming convention from `elm-bridge`
 -}
-jsonEncDict : (comparable -> Json.Encode.Value) -> (v -> Json.Encode.Value) -> Dict comparable v -> Json.Encode.Value
+jsonEncDict : (comparable -> String) -> (v -> Json.Encode.Value) -> Dict comparable v -> Json.Encode.Value
 jsonEncDict =
     encodeMap
 
