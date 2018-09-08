@@ -371,7 +371,7 @@ jsonDecDict =
 -}
 encodeSet : (comparable -> Json.Encode.Value) -> Set comparable -> Json.Encode.Value
 encodeSet e s =
-    Json.Encode.list (List.map e (Set.toList s))
+    Json.Encode.list identity (List.map e (Set.toList s))
 
 
 {-| A helper for set decoding
