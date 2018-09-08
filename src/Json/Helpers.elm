@@ -257,7 +257,7 @@ encodeSumTwoElementArray mkkeyval v =
         ( key, val ) =
             mkkeyval v
     in
-    Json.Encode.list [ Json.Encode.string key, oeValue val ]
+    Json.Encode.list identity [ Json.Encode.string key, oeValue val ]
 
 
 {-| Encode objects using the `TaggedObject` scheme.
