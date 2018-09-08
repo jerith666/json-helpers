@@ -228,7 +228,7 @@ decodeSumFinal : String -> String -> Value -> Dict String (Json.Decode.Decoder a
 decodeSumFinal name key value mapping =
     case Dict.get key mapping of
         Nothing ->
-            Err ("Unknown constructor " ++ key ++ " for type " ++ name)
+            Err <| Json.Decode.Failure ("Unknown constructor " ++ key ++ " for type " ++ name) Json.Encode.null
 
         Just dec ->
             Json.Decode.decodeValue dec value
